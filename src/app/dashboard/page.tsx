@@ -9,54 +9,6 @@ export default function Dashboard() {
 			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
 				<h1 className="">Hi {user.name}</h1>
 			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
-			<div className="flex flex-col gap-8 row-start-2 items-center sm:items-start h-96">
-				<h1 className="">Hi {user.name}</h1>
-			</div>
 		</div>
 	);
 }

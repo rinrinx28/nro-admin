@@ -1,69 +1,34 @@
 'use client';
 
-import { useAppSelector } from '@/lib/redux/hook';
-import { use } from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hook';
+import { setIsShowNavFull } from '@/lib/redux/storage/navbar/navbar';
+import { use, useEffect, useState } from 'react';
 import { FaAlignLeft, FaUsers } from 'react-icons/fa';
 import { FaShop } from 'react-icons/fa6';
-import { IoGameController, IoLogOut } from 'react-icons/io5';
+import { IoGameController, IoLogOut, IoPowerOutline } from 'react-icons/io5';
+import { LuListMinus } from 'react-icons/lu';
 import { SiGoogleanalytics } from 'react-icons/si';
 
 export default function NavbarUser() {
+	const [view, setView] = useState<ViewList>('main');
 	const user = useAppSelector((state) => state.user);
+	const isShowNav = useAppSelector((state) => state.showNavFull);
+	const dispatch = useAppDispatch();
 	return (
-		<div className="w-full flex flex-row-reverse justify-between items-center bg-white/5 backdrop-blur-md font-protest-strike-regular px-2 sticky top-0">
+		<div className="w-full flex flex-row-reverse justify-between items-center bg-white backdrop-blur-md font-chakra-petch px-4 py-2 sticky top-0">
 			{/* Logo */}
 			<div className="flex flex-row items-center gap-2 sticky top-0 z-[1000] p-2">
-				<div className="dropdown dropdown-end">
-					<div
-						tabIndex={0}
-						role="button"
-						className="btn bg-transparent border-0 hover:bg-transparent">
-						<div className="avatar">
-							<div className="w-12 rounded-full">
-								<img
-									src={`/image/avatar/${user?.meta?.avatar ?? '3'}.webp`}
-									alt="logo user admin"
-								/>
-							</div>
-						</div>
+				<div className="avatar">
+					<div className="w-12 rounded-full">
+						<img
+							src={`/image/avatar/${user?.meta?.avatar ?? '3'}.webp`}
+							alt="logo user admin"
+						/>
 					</div>
-					<ul
-						tabIndex={0}
-						className="dropdown-content menu bg-base-100 rounded-box z-[1] w-fit p-2 shadow">
-						<li>
-							<div className="flex flex-row items-center gap-2">
-								<div className="avatar">
-									<div className="w-12 rounded-full">
-										<img
-											src={`/image/avatar/${user?.meta?.avatar ?? '3'}.webp`}
-											alt="logo user admin"
-										/>
-									</div>
-								</div>
-								<div className="flex flex-col">
-									<p>{user.name}</p>
-									<p>{user.email ?? 'rindev@gmail.com'}</p>
-									<div className="flex flex-row gap-1 items-center">
-										<div className="avatar">
-											<div className="w-6 rounded-full">
-												<img
-													src={`/image/icon/s1.webp`}
-													alt="icon money cash"
-												/>
-											</div>
-										</div>
-										<p>{new Intl.NumberFormat('vi').format(user.money ?? 0)}</p>
-									</div>
-								</div>
-							</div>
-						</li>
-						<li className="lg:hidden">
-							<button className="btn flex flex-row gap-2 items-center text-lg p-2 m-2">
-								<IoLogOut size={24} />
-								Đăng Xuất
-							</button>
-						</li>
-					</ul>
+				</div>
+				<div className="font-protest-strike-regular">
+					<h2>{user.name}</h2>
+					<h3 className="font-chakra-petch">Admin</h3>
 				</div>
 			</div>
 			{/* Draw */}
@@ -78,7 +43,7 @@ export default function NavbarUser() {
 					<label
 						htmlFor="my-drawer"
 						className="btn btn-ghost">
-						<FaAlignLeft size={24} />
+						<LuListMinus size={24} />
 					</label>
 				</div>
 				<div className="drawer-side z-[1050] ">
@@ -86,54 +51,131 @@ export default function NavbarUser() {
 						htmlFor="my-drawer"
 						aria-label="close sidebar"
 						className="drawer-overlay"></label>
-					{/* Logo */}
-					<div className="bg-base-200 text-base-content min-h-full w-80 h-screen overflow-auto">
-						<div className="flex flex-row items-center gap-2 sticky top-0 bg-base-200 z-[1000] p-4">
+					<div className="min-h-screen flex flex-col justify-between bg-white backdrop-blur-md max-h-screen p-4 transition-all">
+						{/* Logo */}
+						<div className="flex flex-row items-center justify-center gap-2 sticky top-0 z-[1000] p-3 font-protest-strike-regular">
 							<div className="avatar">
-								<div className="w-12 rounded-full">
+								<div className="w-6 rounded-full">
 									<img src="/image/icon/7.webp" />
 								</div>
 							</div>
-							<h1 className="text-xl">nrogame.me</h1>
+							<h1 className={`text-xl`}>nrogame.me</h1>
 						</div>
-						<ul className="menu p-4">
-							<li>
-								<div>
-									<SiGoogleanalytics size={24} />
-									<p>Dashboard</p>
-								</div>
-							</li>
-							<li>
-								<div>
-									<IoGameController size={24} />
-									<p>Minigame</p>
-								</div>
-							</li>
-							<li>
-								<div>
-									<FaUsers size={24} />
-									<p>Người Chơi</p>
-								</div>
-							</li>
-							<li>
-								<div>
-									<FaShop size={24} />
-									<p>Giao Dịch</p>
-								</div>
-							</li>
-							<li>
-								<div>
-									<div className="avatar">
-										<div className="w-8 rounded-full">
-											<img src="/image/icon/s1.webp" />
+						{/* Navbar */}
+						<div
+							className={`flex flex-col w-full items-start justify-start h-screen overflow-auto`}>
+							<ul className="flex flex-col text-lg w-full gap-2">
+								<li
+									className={`flex flex-col items-center justify-center px-2 ${
+										view === 'main'
+											? 'border-l-2 rounded-sm border-[#4880FF]'
+											: ''
+									}`}>
+									<button
+										className={`w-[192px] flex flex-row items-center justify-start gap-2 p-2 rounded-xl hover:bg-[#4880FF] hover:text-white hover:duration-300 ${
+											view === 'main' ? 'bg-[#4880FF] text-white' : ''
+										}`}
+										onClick={() => setView('main')}>
+										<SiGoogleanalytics size={24} />
+										<p>Dashboard</p>
+									</button>
+								</li>
+								<li
+									className={`flex flex-col items-center justify-center px-2 ${
+										view === 'minigame'
+											? 'border-l-2 rounded-sm border-[#4880FF]'
+											: ''
+									}`}>
+									<button
+										className={`w-[192px] flex flex-row items-center justify-start gap-2 p-2 rounded-xl hover:bg-[#4880FF] hover:text-white hover:duration-300 ${
+											view === 'minigame' ? 'bg-[#4880FF] text-white' : ''
+										}`}
+										onClick={() => setView('minigame')}>
+										<IoGameController size={24} />
+										<p>Minigame</p>
+									</button>
+								</li>
+								<li
+									className={`flex flex-col items-center justify-center px-2 ${
+										view === 'users'
+											? 'border-l-2 rounded-sm border-[#4880FF]'
+											: ''
+									}`}>
+									<button
+										className={`w-[192px] flex flex-row items-center justify-start gap-2 p-2 rounded-xl hover:bg-[#4880FF] hover:text-white hover:duration-300 ${
+											view === 'users' ? 'bg-[#4880FF] text-white' : ''
+										}`}
+										onClick={() => setView('users')}>
+										<FaUsers size={24} />
+										<p>Người Chơi</p>
+									</button>
+								</li>
+								<li
+									className={`flex flex-col items-center justify-center px-2 ${
+										view === 'service'
+											? 'border-l-2 rounded-sm border-[#4880FF]'
+											: ''
+									}`}>
+									<button
+										className={`w-[192px] flex flex-row items-center justify-start gap-2 p-2 rounded-xl hover:bg-[#4880FF] hover:text-white hover:duration-300 ${
+											view === 'service' ? 'bg-[#4880FF] text-white' : ''
+										}`}
+										onClick={() => setView('service')}>
+										<FaShop size={24} />
+										<p>Giao Dịch</p>
+									</button>
+								</li>
+								<li
+									className={`flex flex-col items-center justify-center px-2 ${
+										view === 'next'
+											? 'border-l-2 rounded-sm border-[#4880FF]'
+											: ''
+									}`}>
+									<button
+										className={`w-[192px] flex flex-row items-center justify-start gap-2 p-2 rounded-xl hover:bg-[#4880FF] hover:text-white hover:duration-300 ${
+											view === 'next' ? 'bg-[#4880FF] text-white' : ''
+										}`}
+										onClick={() => setView('next')}>
+										<div className="avatar">
+											<div className="w-6 rounded-full">
+												<img src="/image/icon/s1.webp" />
+											</div>
 										</div>
-									</div>
-									<p>Money & Gem</p>
-								</div>
-							</li>
-						</ul>
+										<p>Money & Gem</p>
+									</button>
+								</li>
+							</ul>
+						</div>
+						<button className="btn flex flex-row gap-2 items-center text-lg p-2 m-2 bg-[#4880FF] text-white hover:text-black">
+							<IoPowerOutline size={24} />
+							Đăng xuất
+						</button>
 					</div>
 				</div>
+			</div>
+
+			<div className="lg:flex hidden flex-row gap-6 max-w-2xl w-full">
+				<button onClick={() => dispatch(setIsShowNavFull(!isShowNav))}>
+					<LuListMinus size={24} />
+				</button>
+				<label className="input input-bordered flex items-center gap-2 rounded-full max-w-xl w-full">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 16 16"
+						fill="currentColor"
+						className="h-4 w-4 opacity-70">
+						<path
+							fillRule="evenodd"
+							d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+							clipRule="evenodd"
+						/>
+					</svg>
+					<input
+						type="text"
+						className="grow"
+						placeholder="Search"
+					/>
+				</label>
 			</div>
 		</div>
 	);

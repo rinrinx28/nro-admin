@@ -7,12 +7,10 @@ export const viewport: Viewport = {
 	initialScale: 1,
 	maximumScale: 1,
 	userScalable: false,
-	// Also supported by less commonly used
-	// interactiveWidget: 'resizes-visual',
 };
 
 export const metadata: Metadata = {
-	title: 'Login DashBoard Admin',
+	title: 'Login | Dashboard Admin',
 	description: 'Power by Rin',
 	icons: '/image/icon/1.webp',
 	openGraph: {
@@ -70,7 +68,7 @@ export default function RootLayout({
 			</head>
 			<body
 				className={``}
-				data-theme="luxury">
+				data-theme="light">
 				<Providers>{children}</Providers>
 			</body>
 		</html>

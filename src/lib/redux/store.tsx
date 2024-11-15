@@ -16,6 +16,7 @@ import finger from './storage/user/finger';
 import jackpot from './storage/minigame/jackpot';
 import userTop from './storage/top/userTop';
 import clanTop from './storage/top/clanTop';
+import showNavFull from './storage/navbar/navbar';
 
 export const makeStore = () => {
 	return configureStore({
@@ -37,6 +38,7 @@ export const makeStore = () => {
 			jackpot: jackpot,
 			userTop: userTop,
 			clanTop: clanTop,
+			showNavFull: showNavFull,
 		},
 	});
 };

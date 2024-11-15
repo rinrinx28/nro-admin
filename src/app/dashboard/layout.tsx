@@ -10,8 +10,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	title: 'DashBoard Admin | NRO',
-	description: 'Power by Rin',
+	title: 'NRO | Dashboard Admin',
+	description: 'Powered by Rin',
 	icons: '/image/icon/7.webp',
 	openGraph: {
 		type: 'website',
@@ -36,7 +36,7 @@ export default function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-row items-start justify-start">
+		<div className="flex flex-row items-start justify-start bg-[#F5F6FA]">
 			<Navbar />
 			<div className="flex flex-col gap-2 w-full h-screen overflow-auto">
 				<NavbarUser />

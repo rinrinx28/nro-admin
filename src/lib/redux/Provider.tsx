@@ -20,6 +20,7 @@ import { setUserStores } from './storage/user/users';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { setFinger } from './storage/user/finger';
 import { useRouter } from 'next/navigation';
+import { setIsShowNavFull } from './storage/navbar/navbar';
 
 export default function StoreProvider({
 	children,
@@ -91,6 +92,18 @@ export default function StoreProvider({
 		} else {
 			saveFp();
 			router.push('/');
+		}
+
+		// Setup Default Nav status
+		let isShow = localStorage.getItem('isShowNav');
+		if (!isShow) {
+			storeRef.current?.dispatch(setIsShowNavFull(false));
+		} else {
+			if (isShow === 'false') {
+				storeRef.current?.dispatch(setIsShowNavFull(false));
+			} else {
+				storeRef.current?.dispatch(setIsShowNavFull(true));
+			}
 		}
 		return () => {};
 	}, [storeRef, router]);
