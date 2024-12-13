@@ -13,14 +13,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
 	title: 'Login | Dashboard Admin',
 	description: 'Power by Rin',
-	icons: '/image/icon/1.webp',
+	icons: 'https://admin.hsgame.me/image/icon/1.webp',
 	openGraph: {
 		type: 'website',
 		countryName: 'vi',
 		title: 'Login Admin',
 		siteName: 'login',
 		description: 'Đăng nhập trang Dashboard',
-		images: '/image/logo_login.webp',
+		images: 'https://admin.hsgame.me/image/logo_login.webp',
 	},
 	formatDetection: {
 		address: false,

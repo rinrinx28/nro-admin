@@ -10,16 +10,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	title: 'NRO | Dashboard Admin',
+	title: 'HSGAME | Dashboard Admin',
 	description: 'Powered by Rin',
-	icons: '/image/icon/7.webp',
+	icons: 'https://admin.hsgame.me/image/icon/7.webp',
 	openGraph: {
 		type: 'website',
 		countryName: 'vi',
 		title: 'Admin',
 		siteName: 'dashboard',
 		description: 'Trang quản trị website',
-		images: '/image/logo_login.webp',
+		images: 'https://admin.hsgame.me/image/logo_login.webp',
 	},
 	formatDetection: {
 		address: false,
