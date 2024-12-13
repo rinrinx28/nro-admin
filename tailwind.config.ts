@@ -12,6 +12,9 @@ const config: Config = {
 				background: 'var(--background)',
 				foreground: 'var(--foreground)',
 			},
+			transitionProperty: {
+				multiple: 'width, height, backgroundColor, border-radius',
+			},
 		},
 		fontFamily: {
 			'protest-strike-regular': ['Protest Strike', 'sans-serif'],

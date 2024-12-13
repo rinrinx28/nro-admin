@@ -4,19 +4,31 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface User {
 	_id?: string;
 	__v?: number;
-	isLogin: boolean;
-	token?: string;
 	username?: string;
-	name?: string;
-	money?: number;
+	pwd_h?: string;
 	email?: string;
-	role?: string;
-	meta?: Record<string, any>;
-	isBaned?: boolean;
-	server?: string;
+	name?: string;
+	gold?: number;
 	diamon?: number;
-	updatedAt?: Date;
+	clan?: string;
+	totalBet?: number;
+	limitedTrade?: number;
+	trade?: number;
+	isBan?: boolean;
+	isReason?: string;
+	server?: string;
+	ip_address?: string;
+	avatar?: string;
+	type?: string;
+	vip?: number;
+	totalBank?: number;
+	totalClan?: number;
+	deposit?: number;
+	withdraw?: number;
 	createdAt?: Date;
+	updatedAt?: Date;
+	token?: string;
+	isLogin: boolean;
 }
 
 // Define the initial state using that type

@@ -57,9 +57,9 @@ export default function StoreProvider({
 			const { visitorId } = await fp.get();
 			storeRef.current?.dispatch(setFinger(visitorId));
 			apiClient
-				.post(
+				.get(
 					'/auth/relogin',
-					{ hash: visitorId },
+					// { hash: visitorId },
 					{
 						headers: {
 							Authorization: 'Bearer ' + token,

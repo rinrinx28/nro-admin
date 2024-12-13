@@ -34,14 +34,16 @@ export default function Home() {
 			setIsLoad(true);
 			const { data } = await apiClient.post('/auth/login', field);
 			const { access_token, ...res } = data;
-			const { role } = res;
-			if (role !== '0') {
+			const { type } = res.user;
+			if (type === '1') {
 				router.push('/dashboard');
 				// save token if is Remember
 				if (isRemember) {
 					localStorage.setItem('access_token', access_token);
 				}
-				dispatch(updateUser({ ...res, isLogin: true, token: access_token }));
+				dispatch(
+					updateUser({ ...res.user, isLogin: true, token: access_token }),
+				);
 				return;
 			}
 			showNotice('Bạn không đủ quyền hạn');
@@ -138,7 +140,7 @@ export default function Home() {
 								Bạn chưa có tài khoản?{' '}
 								<a
 									className="link underline text-[#5A8CFF] opacity-100"
-									href="https://www.nrogame.me/login">
+									href="https://www.hsgame.me/login">
 									Tạo Tài Khoản
 								</a>
 							</p>

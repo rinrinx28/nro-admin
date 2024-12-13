@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hook';
 import { setIsShowNavFull } from '@/lib/redux/storage/navbar/navbar';
+import { useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 import { FaAlignLeft, FaUsers } from 'react-icons/fa';
 import { FaShop } from 'react-icons/fa6';
@@ -14,19 +15,28 @@ export default function NavbarUser() {
 	const user = useAppSelector((state) => state.user);
 	const isShowNav = useAppSelector((state) => state.showNavFull);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
+	// Go page
+	useEffect(() => {
+		if (view !== 'main') {
+			router.push(`/dashboard/${view}`);
+		} else {
+			router.push('/dashboard');
+		}
+	}, [view]);
 	return (
-		<div className="w-full flex flex-row-reverse justify-between items-center bg-white backdrop-blur-md font-chakra-petch px-4 py-2 sticky top-0">
+		<div className="w-full flex flex-row-reverse justify-between items-center bg-white backdrop-blur-md font-chakra-petch px-4 py-2 sticky top-0 z-10">
 			{/* Logo */}
 			<div className="flex flex-row items-center gap-2 sticky top-0 z-[1000] p-2">
 				<div className="avatar">
 					<div className="w-12 rounded-full">
 						<img
-							src={`/image/avatar/${user?.meta?.avatar ?? '3'}.webp`}
+							src={`/image/avatar/${user?.avatar ?? '3'}.webp`}
 							alt="logo user admin"
 						/>
 					</div>
 				</div>
-				<div className="font-protest-strike-regular">
+				<div className="font-protest-strike-regular text-nowrap">
 					<h2>{user.name}</h2>
 					<h3 className="font-chakra-petch">Admin</h3>
 				</div>
@@ -46,12 +56,12 @@ export default function NavbarUser() {
 						<LuListMinus size={24} />
 					</label>
 				</div>
-				<div className="drawer-side z-[1050] ">
+				<div className="drawer-side z-[1050]">
 					<label
 						htmlFor="my-drawer"
 						aria-label="close sidebar"
 						className="drawer-overlay"></label>
-					<div className="min-h-screen flex flex-col justify-between bg-white backdrop-blur-md max-h-screen p-4 transition-all">
+					<div className="min-h-screen flex flex-col justify-between bg-white backdrop-blur-md max-h-screen p-4 transition-all z-[1050]">
 						{/* Logo */}
 						<div className="flex flex-row items-center justify-center gap-2 sticky top-0 z-[1000] p-3 font-protest-strike-regular">
 							<div className="avatar">
@@ -158,24 +168,6 @@ export default function NavbarUser() {
 				<button onClick={() => dispatch(setIsShowNavFull(!isShowNav))}>
 					<LuListMinus size={24} />
 				</button>
-				<label className="input input-bordered flex items-center gap-2 rounded-full max-w-xl w-full">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 16 16"
-						fill="currentColor"
-						className="h-4 w-4 opacity-70">
-						<path
-							fillRule="evenodd"
-							d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-							clipRule="evenodd"
-						/>
-					</svg>
-					<input
-						type="text"
-						className="grow"
-						placeholder="Search"
-					/>
-				</label>
 			</div>
 		</div>
 	);

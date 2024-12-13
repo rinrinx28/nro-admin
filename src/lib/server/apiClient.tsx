@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 const urlConfig = {
-	dev: 'http://localhost:3037',
-	vps: 'http://144.126.145.81:3037',
-	sv: 'https://api.nrogame.me',
+	dev: 'http://localhost:3031',
+	nro: 'https://api.nrogame.me',
+	hsgame: 'https://api.hsgame.me',
 };
 
 const apiClient = axios.create({
-	baseURL: urlConfig.sv,
+	baseURL: urlConfig.hsgame,
 	headers: {
 		'Content-Type': 'application/json',
 	},

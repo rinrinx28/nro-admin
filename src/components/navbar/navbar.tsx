@@ -1,7 +1,8 @@
 'use client';
 
 import { useAppSelector } from '@/lib/redux/hook';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import { FaShop } from 'react-icons/fa6';
 import { IoGameController, IoLogOut, IoPowerOutline } from 'react-icons/io5';
@@ -10,11 +11,20 @@ import { SiGoogleanalytics } from 'react-icons/si';
 export default function Navbar() {
 	const [view, setView] = useState<ViewList>('main');
 	const isShowNav = useAppSelector((state) => state.showNavFull);
+	const router = useRouter();
+	// Go page
+	useEffect(() => {
+		if (view !== 'main') {
+			router.push(`/dashboard/${view}`);
+		} else {
+			router.push('/dashboard');
+		}
+	}, [view]);
 	return (
 		<div
 			className={`${
-				isShowNav ? 'max-w-[250px] w-full' : 'w-fit'
-			} min-h-screen lg:flex hidden flex-col justify-between bg-white backdrop-blur-md max-h-screen p-4 transition-all`}>
+				isShowNav ? 'w-[250px]' : 'w-[100px]'
+			} min-h-screen lg:flex hidden flex-col justify-between bg-white backdrop-blur-md max-h-screen p-4 transition-all duration-300 ease-out z-[1000]`}>
 			{/* Logo */}
 			<div className="flex flex-row items-center justify-center gap-2 sticky top-0 z-[1000] p-3 font-protest-strike-regular">
 				<div className="avatar">
@@ -22,11 +32,11 @@ export default function Navbar() {
 						<img src="/image/icon/7.webp" />
 					</div>
 				</div>
-				<h1 className={`${isShowNav ? 'text-xl' : 'hidden'}`}>nrogame.me</h1>
+				<h1 className={`${isShowNav ? 'text-xl' : 'hidden'}`}>hsgame.me</h1>
 			</div>
 			{/* Navbar */}
 			<div
-				className={`flex flex-col w-full items-start justify-start h-screen overflow-auto`}>
+				className={`flex flex-col w-full items-start justify-start h-screen overflow-x-hidden overflow-y-auto`}>
 				<ul className="flex flex-col text-lg w-full gap-2">
 					<li
 						className={`flex flex-col items-center justify-center px-2 ${

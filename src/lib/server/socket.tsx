@@ -21,12 +21,12 @@ import { updateJackpot } from '../redux/storage/minigame/jackpot';
 moment().format();
 
 const urlConfig = {
-	dev: 'http://localhost:3037',
-	vps: 'http://144.126.145.81:3037',
-	sv: 'https://api.nrogame.me',
+	dev: 'http://localhost:3031',
+	nro: 'https://api.nrogame.me',
+	hsgame: 'https://api.hsgame.me',
 };
 
-const socket: Socket = io(urlConfig.sv, {
+const socket: Socket = io(urlConfig.hsgame, {
 	path: '/socket.io/',
 	transports: ['websocket'],
 	secure: true,

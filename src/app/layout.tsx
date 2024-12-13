@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Providers from '@/lib/redux/Provider';
+import { SocketProvider } from '@/lib/server/socket';
 
 export const viewport: Viewport = {
 	width: 'device-width',
@@ -69,7 +70,9 @@ export default function RootLayout({
 			<body
 				className={``}
 				data-theme="light">
-				<Providers>{children}</Providers>
+				<Providers>
+					<SocketProvider>{children}</SocketProvider>
+				</Providers>
 			</body>
 		</html>
 	);
