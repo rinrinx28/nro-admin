@@ -36,7 +36,7 @@ export default function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-row items-start justify-start bg-[#F5F6FA]">
+		<div className="flex flex-row items-start justify-start bg-gray-200">
 			<Navbar />
 			<div className="flex flex-col gap-2 w-full h-screen overflow-auto">
 				<NavbarUser />

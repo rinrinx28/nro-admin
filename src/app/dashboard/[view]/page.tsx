@@ -12,9 +12,6 @@ export default function Dashboard({ params }: { params: { view: ViewList } }) {
 	return (
 		<div className="flex flex-col items-center justify-center font-protest-strike-regular">
 			<div className="flex flex-col gap-8 row-start-2 items-center justify-center w-full rounded-lg">
-				<h1 className="">
-					Hi {user.name} - View {view}
-				</h1>
 				{view === 'minigame' && <Minigame />}
 				{view === 'users' && <UserController />}
 				{view === 'service' && <ServiceController />}

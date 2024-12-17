@@ -5,6 +5,7 @@ import apiClient from '@/lib/server/apiClient';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import NoticeModel from './model/notice';
+import { GiDragonShield } from 'react-icons/gi';
 
 interface ResultListUserV3 {
 	page: number;
@@ -24,9 +25,11 @@ interface ConfigPage {
 	vip: string; // VIP
 	gold: string; // Sắp xếp theo Gold
 	deposit: string; // Sắp xếp theo Deposit
+	trade: string; // Sắp xếp theo Trade
 	withdraw: string; // Sắp xếp theo Withdraw
 	totalBet: string; // Sắp xếp theo Total Bet
 	search: string; // Tìm tên hiển thị
+	uid: string; // Tìm theo uid
 }
 
 interface UserField {
@@ -47,9 +50,11 @@ export default function UserController() {
 		vip: 'all', // VIP
 		gold: 'all', // Sắp xếp theo Gold
 		deposit: 'all', // Sắp xếp theo Deposit
+		trade: 'all', // Sắp xếp theo Trade
 		withdraw: 'all', // Sắp xếp theo Withdraw
 		totalBet: 'all', // Sắp xếp theo Total Bet
 		search: '', // Tìm tên hiển thị
+		uid: '', // Tìm theo uid
 	});
 	// Hàm thay đổi giá trị bộ lọc
 	const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -113,8 +118,14 @@ export default function UserController() {
 	}, [owner]);
 	return (
 		<div className="flex flex-col gap-2 w-full max-w-7xl items-center justify-center -z-0">
+			<div className="flex flex-row gap-2 items-center w-full">
+				<GiDragonShield size={34} />
+				<h1 className="font-protest-strike-regular uppercase text-2xl">
+					Quản lý Người dùng
+				</h1>
+			</div>
 			{/* Func */}
-			<div className="flex lg:flex-row flex-wrap gap-2 items-end justify-start">
+			<div className="flex lg:flex-row flex-wrap w-full gap-2 items-end justify-start">
 				<label className="form-control w-fit">
 					<div className="label">
 						<span className="label-text">Hiển thị</span>
@@ -198,6 +209,24 @@ export default function UserController() {
 				</label>
 				<label className="form-control w-fit">
 					<div className="label">
+						<span className="label-text">Trade</span>
+					</div>
+					<select
+						value={pageInfo.trade}
+						onChange={handleFilterChange}
+						name="trade"
+						className="select select-bordered">
+						<option
+							selected
+							value={'all'}>
+							All
+						</option>
+						<option value={'asc'}>Tăng dần</option>
+						<option value={'desc'}>Giảm dần</option>
+					</select>
+				</label>
+				<label className="form-control w-fit">
+					<div className="label">
 						<span className="label-text">Deposit</span>
 					</div>
 					<select
@@ -250,16 +279,34 @@ export default function UserController() {
 						<option value={'desc'}>Giảm dần</option>
 					</select>
 				</label>
-				<label className="input input-bordered flex items-center gap-2">
+				<label className="form-control w-full lg:max-w-xs max-w-40">
+					<div className="label">
+						<span className="label-text">Tìm theo Tên hiển thị</span>
+					</div>
 					<input
-						name="search"
 						type="text"
-						className="grow"
-						placeholder="Ex: Web Lỏ"
+						placeholder="Tên hiển thị"
+						className="input input-bordered w-full lg:max-w-xs max-w-40"
 						onChange={(e) =>
 							setPage((prevFilters) => ({
 								...prevFilters,
 								search: e.target.value,
+							}))
+						}
+					/>
+				</label>
+				<label className="form-control w-full lg:max-w-xs max-w-40">
+					<div className="label">
+						<span className="label-text">Tìm theo UID</span>
+					</div>
+					<input
+						type="text"
+						placeholder="66f57...cecb"
+						className="input input-bordered w-full lg:max-w-xs max-w-40"
+						onChange={(e) =>
+							setPage((prevFilters) => ({
+								...prevFilters,
+								uid: e.target.value,
 							}))
 						}
 					/>
@@ -278,15 +325,17 @@ export default function UserController() {
 							clipRule="evenodd"
 						/>
 					</svg>
-					Tìm
+					Lọc
 				</button>
 			</div>
 			<div className="overflow-auto max-h-[600px] w-full border border-current">
 				<table className="table table-pin-rows">
 					{/* head */}
-					<thead className="text-sm text-center capitalize">
+					<thead className="text-sm text-center capitalize bg-white">
 						<tr>
-							<th className="text-black font-normal border border-current"></th>
+							<th className="text-black font-normal border border-current">
+								Máy Chủ
+							</th>
 							<th className="text-black font-normal border border-current">
 								Tên tài khoản
 							</th>
@@ -303,6 +352,18 @@ export default function UserController() {
 								Gold
 							</th>
 							<th className="text-black font-normal border border-current">
+								deposit
+							</th>
+							<th className="text-black font-normal border border-current">
+								withdraw
+							</th>
+							<th className="text-black font-normal border border-current">
+								totalSum
+							</th>
+							<th className="text-black font-normal border border-current">
+								trade
+							</th>
+							<th className="text-black font-normal border border-current">
 								Diamon (Lục Bảo)
 							</th>
 							<th className="text-black font-normal border border-current">
@@ -315,9 +376,6 @@ export default function UserController() {
 								limitedTrade
 							</th>
 							<th className="text-black font-normal border border-current">
-								trade
-							</th>
-							<th className="text-black font-normal border border-current">
 								totalBank
 							</th>
 							<th className="text-black font-normal border border-current">
@@ -327,12 +385,6 @@ export default function UserController() {
 								totalClan
 							</th>
 							<th className="text-black font-normal border border-current">
-								deposit
-							</th>
-							<th className="text-black font-normal border border-current">
-								withdraw
-							</th>
-							<th className="text-black font-normal border border-current">
 								createdAt
 							</th>
 							<th className="text-black font-normal border border-current">
@@ -340,7 +392,7 @@ export default function UserController() {
 							</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody className="bg-white">
 						{users &&
 							users.length > 0 &&
 							users.map((u) => (
@@ -639,19 +691,33 @@ const UserRow = ({
 				<td className="border border-current">{name}</td>
 				<td className="border border-current">{pwd_h}</td>
 				<td className="border border-current">{email}</td>
-				<td className="border border-current">{gold}</td>
+				<td className="border border-current">
+					{new Intl.NumberFormat().format(gold)}
+				</td>
+				<td className="border border-current">
+					{new Intl.NumberFormat().format(deposit)}
+				</td>
+				<td className="border border-current">
+					{new Intl.NumberFormat().format(withdraw)}
+				</td>
+				<td className="border border-current">
+					<p
+						className={`badge ${
+							deposit < withdraw ? 'badge-error' : 'badge-success'
+						}`}>
+						{new Intl.NumberFormat().format(deposit - withdraw)}
+					</p>
+				</td>
+				<td className="border border-current">{trade}</td>
 				<td className="border border-current">{diamon}</td>
 				<td className="border border-current">
 					{clanObj['clanId'] ?? 'Không có Clan'}
 				</td>
 				<td className="border border-current">{totalBet}</td>
 				<td className="border border-current">{limitedTrade}</td>
-				<td className="border border-current">{trade}</td>
 				<td className="border border-current">{totalBank}</td>
 				<td className="border border-current">{vip}</td>
 				<td className="border border-current">{totalClan ?? 0}</td>
-				<td className="border border-current">{deposit}</td>
-				<td className="border border-current">{withdraw}</td>
 				<td className="border border-current">
 					{moment(createdAt).format('DD/MM/YYYY HH:mm:ss')}
 				</td>

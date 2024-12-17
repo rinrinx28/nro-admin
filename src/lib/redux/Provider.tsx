@@ -87,7 +87,7 @@ export default function StoreProvider({
 		};
 		const token = localStorage.getItem('access_token');
 		// relogin
-		if (token && storeRef) {
+		if (token) {
 			setFp(token);
 		} else {
 			saveFp();

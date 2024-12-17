@@ -58,3 +58,17 @@ interface UserData {
 	withdraw: number;
 	totalbank: number;
 }
+
+interface ServiceData {
+	_id: string;
+	uid: string;
+	type: string;
+	playerName: string;
+	amount: number;
+	recive: number;
+	status: string;
+	server: string;
+	createdAt: Date;
+	updatedAt: Date;
+	__v: number;
+}

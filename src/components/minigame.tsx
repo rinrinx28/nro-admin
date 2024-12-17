@@ -6,6 +6,7 @@ import { useSocket } from '@/lib/server/socket';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import NoticeModel from './model/notice';
+import { GiDragonShield } from 'react-icons/gi';
 
 interface ResultUser {
 	t?: number;
@@ -270,6 +271,12 @@ export default function Minigame() {
 
 	return (
 		<div className="flex flex-col gap-2 w-full max-w-7xl items-center justify-center -z-0">
+			<div className="flex flex-row gap-2 items-center w-full">
+				<GiDragonShield size={34} />
+				<h1 className="font-protest-strike-regular uppercase text-2xl">
+					Quản lý Minigame
+				</h1>
+			</div>
 			<div className="lg:grid lg:grid-cols-4 flex flex-wrap gap-5 font-medium font-chakra-petch">
 				{game && game['1'] && <GameCard game={game['1']} />}
 				{game && game['2'] && <GameCard game={game['2']} />}
@@ -358,7 +365,7 @@ export default function Minigame() {
 				</div>
 				{/* List userBet */}
 				<div className="overflow-auto max-h-[400px] w-full border border-current">
-					<table className="table table-pin-rows table-pin-cols">
+					<table className="table table-pin-rows">
 						{/* head */}
 						<thead className="text-sm  text-center">
 							<tr>
