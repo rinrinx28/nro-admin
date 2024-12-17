@@ -52,26 +52,19 @@ export default function StoreProvider({
 	// Auto Save fingerprintJS and reload;
 	useEffect(() => {
 		const setFp = async (token: string) => {
-			const fp = await FingerprintJS.load();
-
-			const { visitorId } = await fp.get();
-			storeRef.current?.dispatch(setFinger(visitorId));
 			apiClient
-				.get(
-					'/auth/relogin',
-					// { hash: visitorId },
-					{
-						headers: {
-							Authorization: 'Bearer ' + token,
-						},
+				.get('/auth/relogin', {
+					headers: {
+						Authorization: 'Bearer ' + token,
 					},
-				)
+				})
 				.then((res) => {
 					const { role } = res.data;
 					if (role !== '0') {
 						storeRef.current?.dispatch(
 							updateUser({ ...res.data, isLogin: true, token: token }),
 						);
+						router.push('/dashboard/minigame');
 					} else throw new Error('Bạn không đủ quyền hạn');
 				})
 				.catch((err) => {
@@ -79,19 +72,10 @@ export default function StoreProvider({
 					router.push('/');
 				});
 		};
-		const saveFp = async () => {
-			const fp = await FingerprintJS.load();
-
-			const { visitorId } = await fp.get();
-			storeRef.current?.dispatch(setFinger(visitorId));
-		};
 		const token = localStorage.getItem('access_token');
 		// relogin
 		if (token) {
 			setFp(token);
-		} else {
-			saveFp();
-			router.push('/');
 		}
 
 		// Setup Default Nav status
@@ -106,7 +90,7 @@ export default function StoreProvider({
 			}
 		}
 		return () => {};
-	}, [storeRef, router]);
+	}, [router, storeRef]);
 
 	return <Provider store={storeRef.current}>{children}</Provider>;
 }
