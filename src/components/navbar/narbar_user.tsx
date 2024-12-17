@@ -31,7 +31,7 @@ export default function NavbarUser() {
 				<div className="avatar">
 					<div className="w-12 rounded-full">
 						<img
-							src={`/image/avatar/${user?.avatar ?? '3'}.webp`}
+							src={`/image/avatar/2.webp`}
 							alt="logo user admin"
 						/>
 					</div>
