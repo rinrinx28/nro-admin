@@ -238,6 +238,7 @@ export default function ServiceController() {
 						<option value={'1'}>1</option>
 						<option value={'2'}>2</option>
 						<option value={'3'}>3</option>
+						<option value={'4'}>3</option>
 						<option value={'24'}>24</option>
 					</select>
 				</label>
@@ -460,7 +461,8 @@ export default function ServiceController() {
 							</option>
 							<option value={'1'}>Máy chủ 1</option>
 							<option value={'2'}>Máy chủ 2</option>
-							<option value={3}>Máy chủ 3</option>
+							<option value={'3'}>Máy chủ 3</option>
+							<option value={'4'}>Máy chủ 4</option>
 						</select>
 					</label>
 					<label className="form-control w-full max-w-xs">

@@ -48,7 +48,7 @@ const TranslateKey: Result = {
 	CX: 'Chẵn Xỉu',
 };
 
-type ServerList = 'all' | '1' | '2' | '3' | '4';
+type ServerList = 'all' | '1' | '2' | '3' | '4' | '24';
 
 interface Filter {
 	server: ServerList;
@@ -281,6 +281,7 @@ export default function Minigame() {
 				{game && game['1'] && <GameCard game={game['1']} />}
 				{game && game['2'] && <GameCard game={game['2']} />}
 				{game && game['3'] && <GameCard game={game['3']} />}
+				{game && game['4'] && <GameCard game={game['4']} />}
 				{game && game['24'] && <GameCard game={game['24']} />}
 			</div>
 			{/* Func  search/filter userBet & Func change result sv 24*/}
@@ -331,6 +332,7 @@ export default function Minigame() {
 							<option value={'1'}>1</option>
 							<option value={'2'}>2</option>
 							<option value={'3'}>3</option>
+							<option value={'4'}>3</option>
 							<option value={'24'}>24</option>
 						</select>
 					</label>
@@ -536,7 +538,7 @@ const UserBetRow = ({ userBet }: { userBet: UserBetData }) => {
 			<td className="border border-current">{amount}</td>
 			<td className="border border-current">{new_result ?? result ?? ''}</td>
 			<td className="border border-current">
-				{new_resultBet && !['1', '2', '3'].includes(server)
+				{new_resultBet && !['1', '2', '3', '4'].includes(server)
 					? `${resultBet}`
 					: resultBet === '0'
 					? 'Khỉ Đỏ'
