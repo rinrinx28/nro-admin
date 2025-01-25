@@ -281,14 +281,14 @@ export default function Minigame() {
 	};
 
 	return (
-		<div className="flex flex-col gap-2 w-full max-w-7xl items-center justify-center -z-0">
+		<div className="flex flex-col gap-2 w-full p-4 items-center justify-center -z-0">
 			<div className="flex flex-row gap-2 items-center w-full">
 				<GiDragonShield size={34} />
 				<h1 className="font-protest-strike-regular uppercase text-2xl">
 					Quản lý Minigame
 				</h1>
 			</div>
-			<div className="lg:grid lg:grid-cols-4 flex flex-wrap gap-5 font-medium font-chakra-petch">
+			<div className="lg:grid lg:grid-cols-5 flex flex-wrap gap-5 font-medium font-chakra-petch">
 				{game && game['1'] && <GameCard game={game['1']} />}
 				{game && game['2'] && <GameCard game={game['2']} />}
 				{game && game['3'] && <GameCard game={game['3']} />}
