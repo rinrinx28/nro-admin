@@ -62,6 +62,7 @@ interface GetLiveGame {
 
 export default function Minigame() {
 	const user = useAppSelector((state) => state.user);
+	const [msg, setMsg] = useState<string | null>(null);
 	const [filter, setFilter] = useState<Filter>({
 		server: 'all',
 		name: null,
@@ -93,7 +94,9 @@ export default function Minigame() {
 				// Add setData game
 				setGame(newGame);
 				setUserBet(userBets);
-			} catch (err: any) {}
+			} catch (err: any) {
+				showMsg(err?.response?.data?.message);
+			}
 		};
 		if (user.isLogin) {
 			getLive();
@@ -224,7 +227,7 @@ export default function Minigame() {
 					dialog.show();
 				}
 			} catch (err: any) {
-				console.log(err);
+				showMsg(err?.response?.data?.message);
 			}
 		}
 		return;
@@ -242,7 +245,7 @@ export default function Minigame() {
 				const { value = '' } = data;
 				setResultSv24((r) => ({ ...r, old: value }));
 			} catch (err: any) {
-				console.log(err);
+				showMsg(err?.response?.data?.message);
 			}
 		}
 	};
@@ -267,6 +270,14 @@ export default function Minigame() {
 		obj_result.total.TX = `${obj_result.t ? 'T' : 'X'}`;
 		obj_result.total.XIEN = `${obj_result.total.CL}${obj_result.total.TX}`;
 		return `${obj_result.total.XIEN}-${obj_result.total.result}`;
+	};
+
+	const showMsg = (mess: string) => {
+		let dialog = document.getElementById('err-dialog') as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+			setMsg(mess);
+		}
 	};
 
 	return (
@@ -332,7 +343,7 @@ export default function Minigame() {
 							<option value={'1'}>1</option>
 							<option value={'2'}>2</option>
 							<option value={'3'}>3</option>
-							<option value={'4'}>3</option>
+							<option value={'4'}>4</option>
 							<option value={'24'}>24</option>
 						</select>
 					</label>
@@ -436,6 +447,11 @@ export default function Minigame() {
 			</div>
 			<NoticeModel id="notice_change_result">
 				<p className="py-4">Bạn đã đổi kết quả thành công!</p>
+			</NoticeModel>
+			<NoticeModel
+				id="err-dialog"
+				heading="Thông báo">
+				<p>{msg}</p>
 			</NoticeModel>
 		</div>
 	);

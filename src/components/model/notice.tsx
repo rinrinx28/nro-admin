@@ -35,7 +35,7 @@ function NoticeModel({
 			</div>
 			<form
 				method="dialog"
-				className="modal-backdrop">
+				className="modal-backdrop backdrop-blur-md">
 				<button>close</button>
 			</form>
 		</dialog>

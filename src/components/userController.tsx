@@ -41,6 +41,7 @@ interface UserField {
 export default function UserController() {
 	const owner = useAppSelector((state) => state.user);
 	const [users, setUser] = useState<UserData[]>([]);
+	const [msg, setMsg] = useState<string | null>(null);
 	const [pageInfo, setPage] = useState<ConfigPage>({
 		limit: 10,
 		page: 1,
@@ -91,7 +92,7 @@ export default function UserController() {
 			}));
 			setUser(data.data);
 		} catch (err: any) {
-			console.log(err);
+			showMsg(err?.response?.data?.message);
 		}
 	};
 	useEffect(() => {
@@ -109,13 +110,21 @@ export default function UserController() {
 				setPage((p) => ({ ...p, limit, page, total, totalPage }));
 				setUser(data.data);
 			} catch (err: any) {
-				console.log(err);
+				showMsg(err?.response?.data?.message);
 			}
 		};
 		if (owner.isLogin) {
 			getListUserV3();
 		}
 	}, [owner]);
+
+	const showMsg = (mess: string) => {
+		let dialog = document.getElementById('err-dialog') as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+			setMsg(mess);
+		}
+	};
 	return (
 		<div className="flex flex-col gap-2 w-full max-w-7xl items-center justify-center -z-0">
 			<div className="flex flex-row gap-2 items-center w-full">
@@ -426,6 +435,11 @@ export default function UserController() {
 					</button>
 				</div>
 			</div>
+			<NoticeModel
+				id="err-dialog"
+				heading="Thông báo">
+				<p>{msg}</p>
+			</NoticeModel>
 		</div>
 	);
 }

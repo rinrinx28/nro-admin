@@ -42,6 +42,7 @@ interface OrderField {
 
 export default function ServiceController() {
 	const owner = useAppSelector((state) => state.user);
+	const [msg, setMsg] = useState<string | null>(null);
 	const [services, setService] = useState<ServiceData[]>([]);
 	const [pageInfo, setPage] = useState<ConfigPage>({
 		limit: 10,
@@ -109,7 +110,7 @@ export default function ServiceController() {
 			}));
 			setService(data.data);
 		} catch (err: any) {
-			console.log(err);
+			showMsg(err?.response?.data?.message);
 		}
 	};
 
@@ -131,7 +132,7 @@ export default function ServiceController() {
 				}
 			}
 		} catch (err: any) {
-			console.log(err);
+			showMsg(err?.response?.data?.message);
 		}
 	};
 
@@ -139,6 +140,14 @@ export default function ServiceController() {
 		let dialog = document.getElementById('add-service') as HTMLDialogElement;
 		if (dialog) {
 			dialog.show();
+		}
+	};
+
+	const showMsg = (mess: string) => {
+		let dialog = document.getElementById('err-dialog') as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+			setMsg(mess);
 		}
 	};
 
@@ -157,7 +166,9 @@ export default function ServiceController() {
 				const { data: updateServices, limit, page, total, totalPage } = data;
 				setPage((p) => ({ ...p, limit, page, total, totalPage }));
 				setService(updateServices);
-			} catch (err: any) {}
+			} catch (err: any) {
+				showMsg(err?.response?.data?.message);
+			}
 		};
 		if (owner.isLogin) {
 			getListServices(owner.token ?? '');
@@ -238,7 +249,7 @@ export default function ServiceController() {
 						<option value={'1'}>1</option>
 						<option value={'2'}>2</option>
 						<option value={'3'}>3</option>
-						<option value={'4'}>3</option>
+						<option value={'4'}>4</option>
 						<option value={'24'}>24</option>
 					</select>
 				</label>
@@ -541,6 +552,11 @@ export default function ServiceController() {
 						Tạo
 					</button>
 				</form>
+			</NoticeModel>
+			<NoticeModel
+				id="err-dialog"
+				heading="Thông báo">
+				<p>{msg}</p>
 			</NoticeModel>
 		</div>
 	);

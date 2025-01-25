@@ -13,6 +13,7 @@ import { Bar } from 'react-chartjs-2';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/lib/redux/hook';
 import apiClient from '@/lib/server/apiClient';
+import NoticeModel from './model/notice';
 
 ChartJS.register(
 	CategoryScale,
@@ -94,6 +95,7 @@ const DashboardChart: React.FC<ChartProps> = ({ data }) => {
 
 export default function MoneyFlow() {
 	const owner = useAppSelector((state) => state.user);
+	const [msg, setMsg] = useState<string | null>(null);
 	const [data, setData] = useState<DashboardData[]>([]);
 	const [filterType, setFilterType] = useState<
 		'day' | 'month' | 'year' | 'range'
@@ -118,7 +120,15 @@ export default function MoneyFlow() {
 			});
 			setData(data);
 		} catch (err: any) {
-			console.log(err);
+			showMsg(err?.response?.data?.message);
+		}
+	};
+
+	const showMsg = (mess: string) => {
+		let dialog = document.getElementById('err-dialog') as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+			setMsg(mess);
 		}
 	};
 
@@ -214,6 +224,11 @@ export default function MoneyFlow() {
 					</button>
 				</div>
 				<DashboardChart data={data} />
+				<NoticeModel
+					id="err-dialog"
+					heading="Thông báo">
+					<p>{msg}</p>
+				</NoticeModel>
 			</div>
 		</div>
 	);

@@ -7,7 +7,6 @@ import UserController from '@/components/userController';
 import { useAppSelector } from '@/lib/redux/hook';
 
 export default function Dashboard({ params }: { params: { view: ViewList } }) {
-	const user = useAppSelector((state) => state.user);
 	const { view } = params;
 	return (
 		<div className="flex flex-col items-center justify-center font-protest-strike-regular">
