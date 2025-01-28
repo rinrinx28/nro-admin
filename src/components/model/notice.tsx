@@ -5,6 +5,7 @@ interface ConfigModal {
 	children: React.ReactNode;
 	customClass?: string;
 	heading?: string;
+	onClose?: any;
 }
 
 function NoticeModel({
@@ -12,9 +13,11 @@ function NoticeModel({
 	customClass,
 	children,
 	heading = 'Thông Báo',
+	onClose,
 }: ConfigModal) {
 	return (
 		<dialog
+			onClose={onClose}
 			id={id}
 			className="modal p-2 x-[1200]">
 			<div

@@ -40,8 +40,14 @@ interface UserField {
 
 export default function UserController() {
 	const owner = useAppSelector((state) => state.user);
+	const [target, setTarget] = useState<UserData | null>(null);
 	const [users, setUser] = useState<UserData[]>([]);
 	const [msg, setMsg] = useState<string | null>(null);
+	const [field, setField] = useState<UserField>({
+		minus: 0,
+		plus: 0,
+		set: 0,
+	});
 	const [pageInfo, setPage] = useState<ConfigPage>({
 		limit: 10,
 		page: 1,
@@ -95,6 +101,7 @@ export default function UserController() {
 			showMsg(err?.response?.data?.message);
 		}
 	};
+
 	useEffect(() => {
 		const getListUserV3 = async () => {
 			try {
@@ -124,6 +131,234 @@ export default function UserController() {
 			dialog.show();
 			setMsg(mess);
 		}
+	};
+
+	const showPlusGold = () => {
+		let dialog = document.getElementById(
+			`user-action-plus-gold`,
+		) as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+		}
+	};
+
+	const showMinusGold = () => {
+		let dialog = document.getElementById(
+			`user-action-minus-gold`,
+		) as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+		}
+	};
+
+	const showSetGold = () => {
+		let dialog = document.getElementById(
+			`user-action-set-gold`,
+		) as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+		}
+	};
+
+	const showBan = () => {
+		let dialog = document.getElementById(
+			`user-action-ban`,
+		) as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+		}
+	};
+
+	const showUnBan = () => {
+		let dialog = document.getElementById(
+			`user-action-unban`,
+		) as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+		}
+	};
+
+	const showDelete = () => {
+		let dialog = document.getElementById(
+			`user-action-delete`,
+		) as HTMLDialogElement;
+		if (dialog) {
+			dialog.show();
+		}
+	};
+
+	const onCloseDialog = () => {
+		setTarget(null);
+	};
+
+	const closeMainDialog = () => {
+		let dialog = document.getElementById(`user-action`) as HTMLDialogElement;
+		if (dialog) {
+			dialog.close();
+		}
+	};
+
+	//TODO ———————————————[Handler Func User]———————————————
+
+	const handlerGold = async (type: 'plus' | 'minus' | 'set') => {
+		try {
+			if (target) {
+				const { minus, plus, set } = field;
+
+				// Tạo một đối tượng để ánh xạ endpoint và giá trị
+				const endpointMap = {
+					plus: '/user/v3/gold/plus',
+					minus: '/user/v3/gold/minus',
+					set: '/user/v3/gold/set',
+				};
+
+				const amountMap = {
+					plus: parseInt(plus.toString(), 10),
+					minus: parseInt(minus.toString(), 10),
+					set: parseInt(set.toString(), 10),
+				};
+
+				// Xác định endpoint và amount dựa vào type
+				const endpoint = endpointMap[type];
+				const amount = amountMap[type];
+
+				// Gửi yêu cầu API
+				const { data } = await apiClient.post(
+					endpoint,
+					{ uid: target._id, amount },
+					{
+						headers: {
+							Authorization: `Bearer ${owner.token}`,
+						},
+					},
+				);
+
+				const { message, user: updatedUser } = data;
+
+				if (message === 'ok') {
+					// Đóng dialog tương ứng
+					const dialogId = `user-action-${type}-gold`;
+					const dialog = document.getElementById(dialogId) as HTMLDialogElement;
+					if (dialog) {
+						dialog.close();
+					}
+
+					// Cập nhật danh sách người dùng
+					setUser((prevUsers: UserData[]) =>
+						prevUsers.map((u) => (u._id === updatedUser._id ? updatedUser : u)),
+					);
+					setTarget(updatedUser);
+				}
+			}
+		} catch (err: any) {
+			console.error('Error handling gold operation:', err);
+		}
+	};
+
+	const handleBan = async () => {
+		try {
+			if (target) {
+				let inputReason = document.getElementById(
+					`user-input-ban-reason`,
+				) as HTMLInputElement;
+				let reason = inputReason.value;
+				const { data } = await apiClient.post(
+					'/user/v3/ban',
+					{
+						uid: target._id,
+						reason,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${owner.token}`,
+						},
+					},
+				);
+				const { message, user: updatedUser } = data;
+				if (message === 'ok') {
+					let dialog = document.getElementById(
+						`user-action-ban`,
+					) as HTMLDialogElement;
+					if (dialog) {
+						dialog.close();
+					}
+					// Cập nhật danh sách người dùng
+					setUser((prevUsers: UserData[]) =>
+						prevUsers.map((u) => (u._id === updatedUser._id ? updatedUser : u)),
+					);
+					setTarget(updatedUser);
+				}
+			}
+		} catch (err: any) {}
+	};
+
+	const handleUnBan = async () => {
+		try {
+			if (target) {
+				let inputReason = document.getElementById(
+					`user-input-unban-reason`,
+				) as HTMLInputElement;
+				let reason = inputReason.value;
+				const { data } = await apiClient.post(
+					'/user/v3/unban',
+					{
+						uid: target._id,
+						reason,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${owner.token}`,
+						},
+					},
+				);
+				const { message, user: updatedUser } = data;
+				if (message === 'ok') {
+					let dialog = document.getElementById(
+						`user-action-unban`,
+					) as HTMLDialogElement;
+					if (dialog) {
+						dialog.close();
+					}
+					// Cập nhật danh sách người dùng
+					setUser((prevUsers: UserData[]) =>
+						prevUsers.map((u) => (u._id === updatedUser._id ? updatedUser : u)),
+					);
+					setTarget(updatedUser);
+				}
+			}
+		} catch (err: any) {}
+	};
+
+	const handleDelete = async () => {
+		try {
+			if (target) {
+				const { data } = await apiClient.post(
+					'/user/v3/delete',
+					{
+						uid: target._id,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${owner.token}`,
+						},
+					},
+				);
+				const { message } = data;
+				if (message === 'ok') {
+					let dialog = document.getElementById(
+						`user-action-delete`,
+					) as HTMLDialogElement;
+					if (dialog) {
+						dialog.close();
+					}
+					// Cập nhật danh sách người dùng
+					setUser((prevUsers: UserData[]) =>
+						prevUsers.filter((u) => u._id !== target._id),
+					);
+					closeMainDialog();
+				}
+			}
+		} catch (err: any) {}
 	};
 	return (
 		<div className="flex flex-col gap-2 w-full max-w-7xl items-center justify-center -z-0">
@@ -403,16 +638,14 @@ export default function UserController() {
 						</tr>
 					</thead>
 					<tbody className="bg-white">
-						{users &&
-							users.length > 0 &&
-							users.map((u) => (
-								<UserRow
-									user={u}
-									token={owner.token}
-									setUser={setUser}
-									key={u._id}
-								/>
-							))}
+						{users?.map((u) => (
+							<UserRow
+								user={u}
+								token={owner.token}
+								key={u._id}
+								onClick={setTarget}
+							/>
+						))}
 					</tbody>
 				</table>
 			</div>
@@ -440,6 +673,223 @@ export default function UserController() {
 				heading="Thông báo">
 				<p>{msg}</p>
 			</NoticeModel>
+
+			<NoticeModel
+				onClose={onCloseDialog}
+				id={`user-action`}
+				heading="Thông Tin Người Dùng">
+				<div className="flex flex-col gap-2">
+					<p>
+						{target?.username || ''} - {target?.name} - Server: {target?.server}
+					</p>
+					<p>IP: {target?.ip_address}</p>
+					<p>Gold: {target?.gold}</p>
+					<p>
+						Banned:{' '}
+						{!target?.isBan ? 'Chưa' : `Đã Ban - Lý Do: ${target?.isReason}`}
+					</p>
+					<p>Thao tác nhanh</p>
+					<div className="flex flex-wrap gap-4">
+						<button
+							className="btn btn-success btn-sm"
+							onClick={showPlusGold}>
+							Cộng vàng
+						</button>
+						<button
+							className="btn btn-warning btn-sm"
+							onClick={showMinusGold}>
+							Trừ vàng
+						</button>
+						<button
+							className="btn btn-sm"
+							onClick={showSetGold}>
+							Chỉnh vàng
+						</button>
+					</div>
+					<div className="flex flex-row gap-4">
+						{target?.isBan && (
+							<button
+								className="btn btn-success btn-sm"
+								onClick={showUnBan}>
+								Gỡ Cấm tài khoản
+							</button>
+						)}
+						{!target?.isBan && (
+							<button
+								className="btn btn-error btn-sm"
+								onClick={showBan}>
+								Cấm tài khoản
+							</button>
+						)}
+						<button
+							className="btn btn-error btn-sm"
+							onClick={showDelete}>
+							Xóa tài khoản
+						</button>
+					</div>
+				</div>
+			</NoticeModel>
+			<NoticeModel
+				id={`user-action-plus-gold`}
+				heading={`Cộng Vàng - ${target?.name}`}>
+				<div className="flex flex-col gap-2">
+					<label className="form-control w-full max-w-xs">
+						<div className="label">
+							<span className="label-text">Số vàng cộng</span>
+						</div>
+						<input
+							type="text"
+							placeholder="Type here"
+							onChange={(e) => {
+								// Extract numeric part (removes any non-digit characters)
+								let value = getNumbetFromString(e.target.value);
+								let new_value = value.split(/[,.]/g).join('');
+								setField((f) => ({
+									...f,
+									plus: parseInt(new_value.toString(), 10),
+								}));
+								e.target.value = value;
+							}}
+							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
+						/>
+					</label>
+					<button
+						className="btn btn-success btn-sm"
+						onClick={() => handlerGold('plus')}>
+						Cộng vàng
+					</button>
+				</div>
+			</NoticeModel>
+			<NoticeModel
+				id={`user-action-minus-gold`}
+				heading={`Trừ Vàng - ${target?.name}`}>
+				<div className="flex flex-col gap-2">
+					<label className="form-control w-full max-w-xs">
+						<div className="label">
+							<span className="label-text">Số vàng trừ</span>
+						</div>
+						<input
+							type="text"
+							placeholder="Type here"
+							onChange={(e) => {
+								// Extract numeric part (removes any non-digit characters)
+								let value = getNumbetFromString(e.target.value);
+								let new_value = value.split(/[,.]/g).join('');
+								setField((f) => ({
+									...f,
+									minus: parseInt(new_value.toString(), 10),
+								}));
+								e.target.value = value;
+							}}
+							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
+						/>
+					</label>
+					<button
+						className="btn btn-warning btn-sm"
+						onClick={() => handlerGold('minus')}>
+						Trừ vàng
+					</button>
+				</div>
+			</NoticeModel>
+			<NoticeModel
+				id={`user-action-set-gold`}
+				heading={`Chỉnh vàng - ${target?.name}`}>
+				<div className="flex flex-col gap-2">
+					<label className="form-control w-full max-w-xs">
+						<div className="label">
+							<span className="label-text">Số vàng chỉnh</span>
+						</div>
+						<input
+							type="text"
+							placeholder="Type here"
+							onChange={(e) => {
+								// Extract numeric part (removes any non-digit characters)
+								let value = getNumbetFromString(e.target.value);
+								let new_value = value.split(/[,.]/g).join('');
+								setField((f) => ({
+									...f,
+									set: parseInt(new_value.toString(), 10),
+								}));
+								e.target.value = value;
+							}}
+							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
+						/>
+					</label>
+					<button
+						className="btn btn-sm"
+						onClick={() => handlerGold('set')}>
+						Chỉnh vàng
+					</button>
+				</div>
+			</NoticeModel>
+			<NoticeModel
+				id={`user-action-ban`}
+				heading={`Cấm Tài Khoản - ${target?.name}`}>
+				<div className="flex flex-col gap-2">
+					<label className="form-control w-full max-w-xs">
+						<div className="label">
+							<span className="label-text">Lý do</span>
+						</div>
+						<input
+							id={`user-action-ban-reason`}
+							type="text"
+							placeholder="Type here"
+							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
+						/>
+					</label>
+					<button
+						className="btn btn-error btn-sm"
+						onClick={handleBan}>
+						Cấm tài khoản
+					</button>
+				</div>
+			</NoticeModel>
+			<NoticeModel
+				id={`user-action-unban`}
+				heading={`Gỡ Cấm Tài Khoản - ${target?.name}`}>
+				<div className="flex flex-col gap-2">
+					<label className="form-control w-full max-w-xs">
+						<div className="label">
+							<span className="label-text">Lý do</span>
+						</div>
+						<input
+							id={`user-action-unban-reason`}
+							type="text"
+							placeholder="Type here"
+							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
+						/>
+					</label>
+					<button
+						className="btn btn-error btn-sm"
+						onClick={handleUnBan}>
+						Gỡ Cấm tài khoản
+					</button>
+				</div>
+			</NoticeModel>
+			<NoticeModel
+				id={`user-action-delete`}
+				heading={`Xóa tài khoản - ${target?.name}`}>
+				<h2>Bạn có muốn xóa tài khoản này không?</h2>
+				<div className="flex flex-row gap-2">
+					<button
+						className="btn btn-success btn-sm"
+						onClick={handleDelete}>
+						Xóa
+					</button>
+					<button
+						className="btn btn-error btn-sm"
+						onClick={() => {
+							let dialog = document.getElementById(
+								`user-action-delete`,
+							) as HTMLDialogElement;
+							if (dialog) {
+								dialog.close();
+							}
+						}}>
+						Không
+					</button>
+				</div>
+			</NoticeModel>
 		</div>
 	);
 }
@@ -447,17 +897,12 @@ export default function UserController() {
 const UserRow = ({
 	user,
 	token,
-	setUser,
+	onClick,
 }: {
 	user: UserData;
 	token: string | undefined;
-	setUser: any;
+	onClick?: any;
 }) => {
-	const [field, setField] = useState<UserField>({
-		minus: 0,
-		plus: 0,
-		set: 0,
-	});
 	const {
 		username,
 		name,
@@ -481,215 +926,11 @@ const UserRow = ({
 	const clanObj = JSON.parse(clan);
 	//TODO ———————————————[Handler Dialog]———————————————
 	const showOptionUser = () => {
-		let dialog = document.getElementById(`${user._id}`) as HTMLDialogElement;
+		let dialog = document.getElementById(`user-action`) as HTMLDialogElement;
 		if (dialog) {
 			dialog.show();
+			onClick(user);
 		}
-	};
-
-	const showPlusGold = () => {
-		let dialog = document.getElementById(
-			`${user._id}-plus-gold`,
-		) as HTMLDialogElement;
-		if (dialog) {
-			dialog.show();
-		}
-	};
-
-	const showMinusGold = () => {
-		let dialog = document.getElementById(
-			`${user._id}-minus-gold`,
-		) as HTMLDialogElement;
-		if (dialog) {
-			dialog.show();
-		}
-	};
-
-	const showSetGold = () => {
-		let dialog = document.getElementById(
-			`${user._id}-set-gold`,
-		) as HTMLDialogElement;
-		if (dialog) {
-			dialog.show();
-		}
-	};
-
-	const showBan = () => {
-		let dialog = document.getElementById(
-			`${user._id}-ban`,
-		) as HTMLDialogElement;
-		if (dialog) {
-			dialog.show();
-		}
-	};
-
-	const showUnBan = () => {
-		let dialog = document.getElementById(
-			`${user._id}-unban`,
-		) as HTMLDialogElement;
-		if (dialog) {
-			dialog.show();
-		}
-	};
-
-	const showDelete = () => {
-		let dialog = document.getElementById(
-			`${user._id}-delete`,
-		) as HTMLDialogElement;
-		if (dialog) {
-			dialog.show();
-		}
-	};
-
-	//TODO ———————————————[Handler Func User]———————————————
-
-	const handlerGold = async (type: 'plus' | 'minus' | 'set') => {
-		try {
-			const { minus, plus, set } = field;
-
-			// Tạo một đối tượng để ánh xạ endpoint và giá trị
-			const endpointMap = {
-				plus: '/user/v3/gold/plus',
-				minus: '/user/v3/gold/minus',
-				set: '/user/v3/gold/set',
-			};
-
-			const amountMap = {
-				plus: parseInt(plus.toString(), 10),
-				minus: parseInt(minus.toString(), 10),
-				set: parseInt(set.toString(), 10),
-			};
-
-			// Xác định endpoint và amount dựa vào type
-			const endpoint = endpointMap[type];
-			const amount = amountMap[type];
-
-			// Gửi yêu cầu API
-			const { data } = await apiClient.post(
-				endpoint,
-				{ uid: user._id, amount },
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-
-			const { message, user: updatedUser } = data;
-
-			if (message === 'ok') {
-				// Đóng dialog tương ứng
-				const dialogId = `${user._id}-${type}-gold`;
-				const dialog = document.getElementById(dialogId) as HTMLDialogElement;
-				if (dialog) {
-					dialog.close();
-				}
-
-				// Cập nhật danh sách người dùng
-				setUser((prevUsers: UserData[]) =>
-					prevUsers.map((u) => (u._id === updatedUser._id ? updatedUser : u)),
-				);
-			}
-		} catch (err: any) {
-			console.error('Error handling gold operation:', err);
-		}
-	};
-
-	const handleBan = async () => {
-		try {
-			let inputReason = document.getElementById(
-				`${user._id}-ban-reason`,
-			) as HTMLInputElement;
-			let reason = inputReason.value;
-			const { data } = await apiClient.post(
-				'/user/v3/ban',
-				{
-					uid: user._id,
-					reason,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-			const { message, user: updatedUser } = data;
-			if (message === 'ok') {
-				let dialog = document.getElementById(
-					`${user._id}-ban`,
-				) as HTMLDialogElement;
-				if (dialog) {
-					dialog.close();
-				}
-				// Cập nhật danh sách người dùng
-				setUser((prevUsers: UserData[]) =>
-					prevUsers.map((u) => (u._id === updatedUser._id ? updatedUser : u)),
-				);
-			}
-		} catch (err: any) {}
-	};
-
-	const handleUnBan = async () => {
-		try {
-			let inputReason = document.getElementById(
-				`${user._id}-unban-reason`,
-			) as HTMLInputElement;
-			let reason = inputReason.value;
-			const { data } = await apiClient.post(
-				'/user/v3/unban',
-				{
-					uid: user._id,
-					reason,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-			const { message, user: updatedUser } = data;
-			if (message === 'ok') {
-				let dialog = document.getElementById(
-					`${user._id}-unban`,
-				) as HTMLDialogElement;
-				if (dialog) {
-					dialog.close();
-				}
-				// Cập nhật danh sách người dùng
-				setUser((prevUsers: UserData[]) =>
-					prevUsers.map((u) => (u._id === updatedUser._id ? updatedUser : u)),
-				);
-			}
-		} catch (err: any) {}
-	};
-
-	const handleDelete = async () => {
-		try {
-			const { data } = await apiClient.post(
-				'/user/v3/delete',
-				{
-					uid: user._id,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-			const { message } = data;
-			if (message === 'ok') {
-				let dialog = document.getElementById(
-					`${user._id}-delete`,
-				) as HTMLDialogElement;
-				if (dialog) {
-					dialog.close();
-				}
-				// Cập nhật danh sách người dùng
-				setUser((prevUsers: UserData[]) =>
-					prevUsers.filter((u) => u._id !== user._id),
-				);
-			}
-		} catch (err: any) {}
 	};
 
 	return (
@@ -740,220 +981,6 @@ const UserRow = ({
 					{moment(updatedAt).format('DD/MM/YYYY HH:mm:ss')}
 				</td>
 			</tr>
-			<NoticeModel
-				id={`${user._id}`}
-				heading="Thông Tin Người Dùng">
-				<div className="flex flex-col gap-2">
-					<p>
-						{username} - {name} - Server: {server}
-					</p>
-					<p>IP: {user.ip_address}</p>
-					<p>Gold: {gold}</p>
-					<p>
-						Banned: {!user.isBan ? 'Chưa' : `Đã Ban - Lý Do: ${user.isReason}`}
-					</p>
-					<p>Thao tác nhanh</p>
-					<div className="flex flex-wrap gap-4">
-						<button
-							className="btn btn-success btn-sm"
-							onClick={showPlusGold}>
-							Cộng vàng
-						</button>
-						<button
-							className="btn btn-warning btn-sm"
-							onClick={showMinusGold}>
-							Trừ vàng
-						</button>
-						<button
-							className="btn btn-sm"
-							onClick={showSetGold}>
-							Chỉnh vàng
-						</button>
-					</div>
-					<div className="flex flex-row gap-4">
-						{user.isBan && (
-							<button
-								className="btn btn-success btn-sm"
-								onClick={showUnBan}>
-								Gỡ Cấm tài khoản
-							</button>
-						)}
-						{!user.isBan && (
-							<button
-								className="btn btn-error btn-sm"
-								onClick={showBan}>
-								Cấm tài khoản
-							</button>
-						)}
-						<button
-							className="btn btn-error btn-sm"
-							onClick={showDelete}>
-							Xóa tài khoản
-						</button>
-					</div>
-				</div>
-			</NoticeModel>
-			<NoticeModel
-				id={`${user._id}-plus-gold`}
-				heading={`Cộng Vàng - ${user.name}`}>
-				<div className="flex flex-col gap-2">
-					<label className="form-control w-full max-w-xs">
-						<div className="label">
-							<span className="label-text">Số vàng cộng</span>
-						</div>
-						<input
-							type="text"
-							placeholder="Type here"
-							onChange={(e) => {
-								// Extract numeric part (removes any non-digit characters)
-								let value = getNumbetFromString(e.target.value);
-								let new_value = value.split(/[,.]/g).join('');
-								setField((f) => ({
-									...f,
-									plus: parseInt(new_value.toString(), 10),
-								}));
-								e.target.value = value;
-							}}
-							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
-						/>
-					</label>
-					<button
-						className="btn btn-success btn-sm"
-						onClick={() => handlerGold('plus')}>
-						Cộng vàng
-					</button>
-				</div>
-			</NoticeModel>
-			<NoticeModel
-				id={`${user._id}-minus-gold`}
-				heading={`Trừ Vàng - ${user.name}`}>
-				<div className="flex flex-col gap-2">
-					<label className="form-control w-full max-w-xs">
-						<div className="label">
-							<span className="label-text">Số vàng trừ</span>
-						</div>
-						<input
-							type="text"
-							placeholder="Type here"
-							onChange={(e) => {
-								// Extract numeric part (removes any non-digit characters)
-								let value = getNumbetFromString(e.target.value);
-								let new_value = value.split(/[,.]/g).join('');
-								setField((f) => ({
-									...f,
-									minus: parseInt(new_value.toString(), 10),
-								}));
-								e.target.value = value;
-							}}
-							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
-						/>
-					</label>
-					<button
-						className="btn btn-warning btn-sm"
-						onClick={() => handlerGold('minus')}>
-						Trừ vàng
-					</button>
-				</div>
-			</NoticeModel>
-			<NoticeModel
-				id={`${user._id}-set-gold`}
-				heading={`Chỉnh vàng - ${user.name}`}>
-				<div className="flex flex-col gap-2">
-					<label className="form-control w-full max-w-xs">
-						<div className="label">
-							<span className="label-text">Số vàng chỉnh</span>
-						</div>
-						<input
-							type="text"
-							placeholder="Type here"
-							onChange={(e) => {
-								// Extract numeric part (removes any non-digit characters)
-								let value = getNumbetFromString(e.target.value);
-								let new_value = value.split(/[,.]/g).join('');
-								setField((f) => ({
-									...f,
-									set: parseInt(new_value.toString(), 10),
-								}));
-								e.target.value = value;
-							}}
-							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
-						/>
-					</label>
-					<button
-						className="btn btn-sm"
-						onClick={() => handlerGold('set')}>
-						Chỉnh vàng
-					</button>
-				</div>
-			</NoticeModel>
-			<NoticeModel
-				id={`${user._id}-ban`}
-				heading={`Cấm Tài Khoản - ${name}`}>
-				<div className="flex flex-col gap-2">
-					<label className="form-control w-full max-w-xs">
-						<div className="label">
-							<span className="label-text">Lý do</span>
-						</div>
-						<input
-							id={`${user._id}-ban-reason`}
-							type="text"
-							placeholder="Type here"
-							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
-						/>
-					</label>
-					<button
-						className="btn btn-error btn-sm"
-						onClick={handleBan}>
-						Cấm tài khoản
-					</button>
-				</div>
-			</NoticeModel>
-			<NoticeModel
-				id={`${user._id}-unban`}
-				heading={`Gỡ Cấm Tài Khoản - ${name}`}>
-				<div className="flex flex-col gap-2">
-					<label className="form-control w-full max-w-xs">
-						<div className="label">
-							<span className="label-text">Lý do</span>
-						</div>
-						<input
-							id={`${user._id}-unban-reason`}
-							type="text"
-							placeholder="Type here"
-							className="outline-none border-0 z-10 w-full py-3 px-2 bg-transparent font-bold"
-						/>
-					</label>
-					<button
-						className="btn btn-error btn-sm"
-						onClick={handleUnBan}>
-						Gỡ Cấm tài khoản
-					</button>
-				</div>
-			</NoticeModel>
-			<NoticeModel
-				id={`${user._id}-delete`}
-				heading={`Xóa tài khoản - ${name}`}>
-				<h2>Bạn có muốn xóa tài khoản này không?</h2>
-				<div className="flex flex-row gap-2">
-					<button
-						className="btn btn-success btn-sm"
-						onClick={handleDelete}>
-						Xóa
-					</button>
-					<button
-						className="btn btn-error btn-sm"
-						onClick={() => {
-							let dialog = document.getElementById(
-								`${user._id}-delete`,
-							) as HTMLDialogElement;
-							if (dialog) {
-								dialog.close();
-							}
-						}}>
-						Không
-					</button>
-				</div>
-			</NoticeModel>
 		</>
 	);
 };
